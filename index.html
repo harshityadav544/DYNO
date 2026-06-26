@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TruthLens AI - Real-Time Fake News Detection</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-icon">🔍</span>
+                <span class="logo-text">TruthLens AI</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#analytics" class="nav-link">Analytics</a>
+                <a href="#cta" class="nav-link btn-primary">Start Free</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Interactive Analyzer -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="gradient-blur"></div>
+            <canvas id="canvas-background"></canvas>
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="text-gradient">Separate Fact from Fiction</span>
+                    <span class="text-normal">with AI-Powered Verification</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Real-time detection of misinformation. Understand the reasoning behind every verdict.
+                </p>
+            </div>
+
+            <!-- Interactive Fake News Analyzer -->
+            <div class="analyzer-container">
+                <div class="analyzer-card">
+                    <div class="analyzer-input-wrapper">
+                        <input 
+                            type="text" 
+                            id="analyzer-input" 
+                            class="analyzer-input" 
+                            placeholder="Paste article headline or text to analyze..."
+                            autocomplete="off"
+                        >
+                        <button class="analyze-button" id="analyze-btn">
+                            <span class="button-text">Analyze</span>
+                            <span class="button-icon">⚡</span>
+                        </button>
+                    </div>
+
+                    <!-- Results Panel -->
+                    <div class="analyzer-results" id="analyzer-results" style="display: none;">
+                        <div class="results-header">
+                            <div class="verdict-badge" id="verdict-badge">
+                                <div class="verdict-icon">✓</div>
+                                <div class="verdict-text">
+                                    <div class="verdict-label">Credibility Score</div>
+                                    <div class="verdict-score" id="verdict-score">92%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trust Heatmap -->
+                        <div class="trust-heatmap">
+                            <div class="heatmap-title">Source Credibility Breakdown</div>
+                            <div class="heatmap-grid">
+                                <div class="heatmap-item">
+                                    <div class="heatmap-label">Factual Accuracy</div>
+                                    <div class="heatmap-bar"><div class="heatmap-fill" id="accuracy-fill" style="width: 85%"></div></div>
+                                    <div class="heatmap-value" id="accuracy-value">85%</div>
+                                </div>
+                                <div class="heatmap-item">
+                                    <div class="heatmap-label">Source Authority</div>
+                                    <div class="heatmap-bar"><div class="heatmap-fill" id="authority-fill" style="width: 78%"></div></div>
+                                    <div class="heatmap-value" id="authority-value">78%</div>
+                                </div>
+                                <div class="heatmap-item">
+                                    <div class="heatmap-label">Bias Detection</div>
+                                    <div class="heatmap-bar"><div class="heatmap-fill" id="bias-fill" style="width: 72%"></div></div>
+                                    <div class="heatmap-value" id="bias-value">72%</div>
+                                </div>
+                                <div class="heatmap-item">
+                                    <div class="heatmap-label">Citation Quality</div>
+                                    <div class="heatmap-bar"><div class="heatmap-fill" id="citation-fill" style="width: 88%"></div></div>
+                                    <div class="heatmap-value" id="citation-value">88%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Explainable AI Results -->
+                        <div class="explainable-ai">
+                            <div class="ai-title">AI Reasoning</div>
+                            <div class="ai-reasoning" id="ai-reasoning">
+                                <div class="reasoning-point">
+                                    <span class="reasoning-icon">✓</span>
+                                    <span class="reasoning-text">Sources are cited from established news outlets</span>
+                                </div>
+                                <div class="reasoning-point">
+                                    <span class="reasoning-icon">✓</span>
+                                    <span class="reasoning-text">Language patterns indicate factual reporting</span>
+                                </div>
+                                <div class="reasoning-point">
+                                    <span class="reasoning-icon">⚠</span>
+                                    <span class="reasoning-text">Minor sensationalism detected in headline</span>
+                                </div>
+                                <div class="reasoning-point">
+                                    <span class="reasoning-icon">✓</span>
+                                    <span class="reasoning-text">Cross-referenced with 450+ verified sources</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating Verification Badges -->
+                        <div class="verification-badges">
+                            <div class="badge verified">
+                                <span class="badge-icon">🔒</span>
+                                <span class="badge-text">Verified</span>
+                            </div>
+                            <div class="badge credible">
+                                <span class="badge-icon">⭐</span>
+                                <span class="badge-text">Credible Source</span>
+                            </div>
+                            <div class="badge authentic">
+                                <span class="badge-icon">✓</span>
+                                <span class="badge-text">Authentic</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Articles for Quick Demo -->
+                    <div class="sample-articles" id="sample-articles">
+                        <div class="samples-title">Try these examples:</div>
+                        <div class="samples-grid">
+                            <button class="sample-btn" data-sample="1">AI Breakthrough in Medicine</button>
+                            <button class="sample-btn" data-sample="2">Climate Report Released</button>
+                            <button class="sample-btn" data-sample="3">Tech Stock Surge</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real-time AI Verification Engine Visualization -->
+    <section class="verification-engine">
+        <div class="section-container">
+            <h2>Real-Time Verification Engine</h2>
+            <p class="section-subtitle">Watch how our AI analyzes articles in real-time</p>
+            
+            <div class="engine-visualization">
+                <div class="engine-stages">
+                    <div class="stage">
+                        <div class="stage-number">01</div>
+                        <div class="stage-name">Text Processing</div>
+                        <div class="stage-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div class="stage-description">Parsing and tokenizing content</div>
+                    </div>
+                    <div class="stage-connector"></div>
+
+                    <div class="stage">
+                        <div class="stage-number">02</div>
+                        <div class="stage-name">Source Analysis</div>
+                        <div class="stage-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                        <div class="stage-description">Verifying source credibility</div>
+                    </div>
+                    <div class="stage-connector"></div>
+
+                    <div class="stage">
+                        <div class="stage-number">03</div>
+                        <div class="stage-name">Fact Checking</div>
+                        <div class="stage-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 70%;"></div>
+                            </div>
+                        </div>
+                        <div class="stage-description">Cross-referencing facts</div>
+                    </div>
+                    <div class="stage-connector"></div>
+
+                    <div class="stage">
+                        <div class="stage-number">04</div>
+                        <div class="stage-name">Bias Detection</div>
+                        <div class="stage-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 55%;"></div>
+                            </div>
+                        </div>
+                        <div class="stage-description">Identifying language bias</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Statistics Counters -->
+    <section class="statistics">
+        <div class="section-container">
+            <h2>Trusted by Global Audiences</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="15000000">0</div>
+                    <div class="stat-label">Articles Analyzed</div>
+                    <div class="stat-icon">📰</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="2800000">0</div>
+                    <div class="stat-label">Misinformation Detected</div>
+                    <div class="stat-icon">⚠️</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="156">0</div>
+                    <div class="stat-label">Countries Covered</div>
+                    <div class="stat-icon">🌍</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="98.7">0</div>
+                    <div class="stat-label">Detection Accuracy %</div>
+                    <div class="stat-icon">🎯</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Globe - Information Flow Visualization -->
+    <section class="globe-section" id="globe-section">
+        <div class="section-container">
+            <h2>Global Information Flow</h2>
+            <p class="section-subtitle">See how misinformation spreads and how we combat it worldwide</p>
+            
+            <div class="globe-container">
+                <canvas id="globe-canvas"></canvas>
+                <div class="globe-legend">
+                    <div class="legend-item verified-flow">
+                        <span class="legend-dot"></span>
+                        Verified Information
+                    </div>
+                    <div class="legend-item unverified-flow">
+                        <span class="legend-dot"></span>
+                        Potential Misinformation
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Animated Article Verification Process -->
+    <section class="verification-process" id="how-it-works">
+        <div class="section-container">
+            <h2>How It Works</h2>
+            <div class="process-grid">
+                <div class="process-card">
+                    <div class="process-icon">1️⃣</div>
+                    <h3>Submit Content</h3>
+                    <p>Paste any article headline, text, or URL</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-icon">2️⃣</div>
+                    <h3>AI Analysis</h3>
+                    <p>Advanced algorithms analyze content instantly</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-icon">3️⃣</div>
+                    <h3>Fact Verification</h3>
+                    <p>Cross-reference with trusted sources</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-icon">4️⃣</div>
+                    <h3>Get Insights</h3>
+                    <p>View detailed AI reasoning and credibility score</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-container">
+            <h2>Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Advanced AI Model</h3>
+                    <p>Trained on millions of articles to detect subtle misinformation patterns</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-Time Detection</h3>
+                    <p>Get verification results in seconds, not minutes</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3>Source Tracking</h3>
+                    <p>Trace information back to its original source</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Detailed Analytics</h3>
+                    <p>Explainable AI reasoning for every decision</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Multi-Language</h3>
+                    <p>Support for 45+ languages and regional dialects</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3>Enterprise Security</h3>
+                    <p>Military-grade encryption for all user data</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Section -->
+    <section class="analytics" id="analytics">
+        <div class="section-container">
+            <h2>Misinformation Trends</h2>
+            <div class="analytics-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Detection by Category</div>
+                    <canvas id="category-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Accuracy Over Time</div>
+                    <canvas id="accuracy-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="cta">
+        <div class="section-container">
+            <h2>Start Verifying Today</h2>
+            <p>Join thousands of media professionals using TruthLens AI</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary-large">Start Free Trial</button>
+                <button class="btn btn-secondary-large">Request Demo</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>TruthLens AI</h4>
+                    <p>Combating misinformation with artificial intelligence</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TruthLens AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>
