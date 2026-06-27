@@ -199,12 +199,171 @@ body {
     z-index: 1;
     max-width: 1200px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================
+   ANIMATED GLASS SPHERE
+   ============================================ */
+
+.sphere-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto var(--spacing-3xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: sphereSettle 2s ease-out, cameraPullBack 2s ease-out;
+}
+
+@keyframes sphereSettle {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.8);
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes cameraPullBack {
+    0% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+#sphere-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0 0 50px rgba(0, 102, 255, 0.3));
+}
+
+.light-beam {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 250px;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 102, 255, 0.8),
+        rgba(0, 102, 255, 0.3),
+        transparent
+    );
+    clip-path: polygon(30% 0%, 70% 0%, 90% 100%, 10% 100%);
+    animation: lightBeamIntensify 2s ease-out;
+    pointer-events: none;
+}
+
+@keyframes lightBeamIntensify {
+    0% {
+        opacity: 0;
+        height: 200px;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+        height: 250px;
+    }
+}
+
+.sphere-text-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: circle(45%);
+    overflow: hidden;
+    z-index: 2;
+}
+
+.sphere-text {
+    font-size: 2.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 3px;
+    animation: textRefract 2.5s ease-out 0.3s both;
+    transform: scaleY(1.2);
+    filter: blur(0.5px);
+}
+
+@keyframes textRefract {
+    0% {
+        opacity: 0;
+        transform: scaleY(1.2) scaleX(0.8) translateY(20px);
+        filter: blur(5px);
+    }
+    50% {
+        opacity: 0.6;
+        filter: blur(2px);
+    }
+    100% {
+        opacity: 1;
+        transform: scaleY(1) scaleX(1) translateY(0);
+        filter: blur(0.5px);
+    }
+}
+
+.sphere-glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 102, 255, 0.3) 0%, transparent 70%);
+    animation: spherePulse 2.5s ease-out 1.5s both;
+    box-shadow: 
+        0 0 40px rgba(0, 102, 255, 0.4),
+        0 0 80px rgba(0, 212, 170, 0.2),
+        inset 0 0 60px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes spherePulse {
+    0% {
+        box-shadow: 
+            0 0 0px rgba(255, 255, 255, 0),
+            0 0 0px rgba(0, 102, 255, 0),
+            inset 0 0 60px rgba(255, 255, 255, 0.3);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 
+            0 0 60px rgba(255, 255, 255, 0.6),
+            0 0 100px rgba(0, 102, 255, 0.5),
+            inset 0 0 60px rgba(255, 255, 255, 0.3);
+    }
+    100% {
+        box-shadow: 
+            0 0 40px rgba(0, 102, 255, 0.4),
+            0 0 80px rgba(0, 212, 170, 0.2),
+            inset 0 0 60px rgba(255, 255, 255, 0.3);
+        transform: scale(1);
+    }
 }
 
 .hero-text {
     text-align: center;
     margin-bottom: var(--spacing-3xl);
-    animation: fadeInUp 0.8s ease-out;
+    animation: fadeInUp 0.8s ease-out 0.5s backwards;
 }
 
 @keyframes fadeInUp {
@@ -254,7 +413,7 @@ body {
 .analyzer-container {
     max-width: 800px;
     margin: 0 auto var(--spacing-3xl);
-    animation: fadeInUp 0.8s ease-out 0.2s backwards;
+    animation: fadeInUp 0.8s ease-out 0.7s backwards;
 }
 
 .analyzer-card {
@@ -1240,6 +1399,16 @@ body {
         padding: 80px var(--spacing-md) var(--spacing-2xl);
     }
 
+    .sphere-container {
+        width: 200px;
+        height: 200px;
+        margin-bottom: var(--spacing-2xl);
+    }
+
+    .sphere-text {
+        font-size: 1.5rem;
+    }
+
     .hero-title {
         font-size: 2rem;
     }
@@ -1284,6 +1453,17 @@ body {
     .nav-links {
         gap: var(--spacing-md);
         font-size: 0.9rem;
+    }
+
+    .sphere-container {
+        width: 150px;
+        height: 150px;
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .sphere-text {
+        font-size: 1rem;
+        letter-spacing: 1px;
     }
 
     .hero-title {
