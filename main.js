@@ -1,4 +1,194 @@
 // ============================================
+// GLASS SPHERE ANIMATION
+// ============================================
+
+const sphereCanvas = document.getElementById('sphere-canvas');
+if (sphereCanvas) {
+    const sphereCtx = sphereCanvas.getContext('2d');
+    let animationProgress = 0;
+    let isSpherezoom = false;
+
+    function resizeSphereCanvas() {
+        const container = sphereCanvas.parentElement;
+        sphereCanvas.width = container.clientWidth;
+        sphereCanvas.height = container.clientHeight;
+    }
+
+    resizeSphereCanvas();
+    window.addEventListener('resize', resizeSphereCanvas);
+
+    // Particle system for sphere interior
+    const sphereParticles = [];
+    const particleCount = 80;
+
+    class SphereParticle {
+        constructor(centerX, centerY, radius) {
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * radius;
+            
+            this.x = centerX + Math.cos(angle) * distance;
+            this.y = centerY + Math.sin(angle) * distance;
+            this.centerX = centerX;
+            this.centerY = centerY;
+            this.baseX = this.x;
+            this.baseY = this.y;
+            
+            this.size = Math.random() * 2 + 0.5;
+            this.speedX = (Math.random() - 0.5) * 0.3;
+            this.speedY = (Math.random() - 0.5) * 0.3;
+            this.opacity = Math.random() * 0.6 + 0.2;
+            this.angle = Math.random() * Math.PI * 2;
+            this.orbitSpeed = Math.random() * 0.01 + 0.005;
+            this.orbitRadius = Math.random() * radius * 0.6 + radius * 0.3;
+            this.time = Math.random() * Math.PI * 2;
+        }
+
+        update(centerX, centerY) {
+            this.time += this.orbitSpeed;
+            this.x = centerX + Math.cos(this.time) * this.orbitRadius;
+            this.y = centerY + Math.sin(this.time) * this.orbitRadius;
+        }
+
+        draw(ctx) {
+            ctx.fillStyle = `rgba(0, 102, 255, ${this.opacity})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function initSphereParticles(centerX, centerY, radius) {
+        sphereParticles.length = 0;
+        for (let i = 0; i < particleCount; i++) {
+            sphereParticles.push(new SphereParticle(centerX, centerY, radius));
+        }
+    }
+
+    function drawSphereGradient(ctx, centerX, centerY, radius) {
+        // Multiple radial gradients for depth
+        const gradient1 = ctx.createRadialGradient(
+            centerX - radius * 0.3, centerY - radius * 0.3, 0,
+            centerX, centerY, radius
+        );
+        
+        gradient1.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+        gradient1.addColorStop(0.3, 'rgba(0, 102, 255, 0.4)');
+        gradient1.addColorStop(0.7, 'rgba(0, 212, 170, 0.2)');
+        gradient1.addColorStop(1, 'rgba(0, 102, 255, 0.1)');
+
+        ctx.fillStyle = gradient1;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    function drawSphereReflection(ctx, centerX, centerY, radius) {
+        // Top left reflection
+        const reflectionGradient = ctx.createRadialGradient(
+            centerX - radius * 0.4, centerY - radius * 0.4, 0,
+            centerX - radius * 0.4, centerY - radius * 0.4, radius * 0.6
+        );
+        
+        reflectionGradient.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+        reflectionGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+        ctx.fillStyle = reflectionGradient;
+        ctx.beginPath();
+        ctx.arc(centerX - radius * 0.4, centerY - radius * 0.4, radius * 0.6, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    function drawSphereRim(ctx, centerX, centerY, radius) {
+        // Outer rim for depth
+        ctx.strokeStyle = 'rgba(0, 212, 170, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Inner rim
+        ctx.strokeStyle = 'rgba(0, 102, 255, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius * 0.95, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    function drawSphere() {
+        sphereCtx.clearRect(0, 0, sphereCanvas.width, sphereCanvas.height);
+
+        const centerX = sphereCanvas.width / 2;
+        const centerY = sphereCanvas.height / 2;
+        const radius = Math.min(sphereCanvas.width, sphereCanvas.height) * 0.3;
+
+        // Initialize particles once
+        if (sphereParticles.length === 0) {
+            initSphereParticles(centerX, centerY, radius);
+        }
+
+        // Animate progress
+        animationProgress += 0.005;
+
+        // Draw sphere layers
+        drawSphereGradient(sphereCtx, centerX, centerY, radius);
+
+        // Update and draw particles
+        sphereParticles.forEach(particle => {
+            particle.update(centerX, centerY);
+            particle.draw(sphereCtx);
+        });
+
+        // Draw connections between particles
+        for (let i = 0; i < sphereParticles.length; i++) {
+            for (let j = i + 1; j < Math.min(i + 5, sphereParticles.length); j++) {
+                const dx = sphereParticles[i].x - sphereParticles[j].x;
+                const dy = sphereParticles[i].y - sphereParticles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < radius * 0.5) {
+                    const opacity = (1 - distance / (radius * 0.5)) * 0.2;
+                    sphereCtx.strokeStyle = `rgba(0, 212, 170, ${opacity})`;
+                    sphereCtx.lineWidth = 1;
+                    sphereCtx.beginPath();
+                    sphereCtx.moveTo(sphereParticles[i].x, sphereParticles[i].y);
+                    sphereCtx.lineTo(sphereParticles[j].x, sphereParticles[j].y);
+                    sphereCtx.stroke();
+                }
+            }
+        }
+
+        // Draw reflections
+        drawSphereReflection(sphereCtx, centerX, centerY, radius);
+        drawSphereRim(sphereCtx, centerX, centerY, radius);
+
+        requestAnimationFrame(drawSphere);
+    }
+
+    // Add mouse interaction
+    sphereCanvas.addEventListener('mousemove', (e) => {
+        const rect = sphereCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = sphereCanvas.width / 2;
+        const centerY = sphereCanvas.height / 2;
+        const distance = Math.sqrt(
+            Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)
+        );
+
+        const radius = Math.min(sphereCanvas.width, sphereCanvas.height) * 0.3;
+
+        if (distance < radius) {
+            isSpherezoom = true;
+        } else {
+            isSpherezoom = false;
+        }
+    });
+
+    drawSphere();
+}
+
+// ============================================
 // INTERACTIVE ANALYZER FUNCTIONALITY
 // ============================================
 
@@ -582,11 +772,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // KEYBOARD SUPPORT
 // ============================================
 
-analyzerInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && e.ctrlKey) {
-        analyzeBtn.click();
-    }
-});
+if (analyzerInput) {
+    analyzerInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.ctrlKey) {
+            analyzeBtn.click();
+        }
+    });
+}
 
 // ============================================
 // ACCESSIBILITY
@@ -616,7 +808,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initializeAnalyzer() {
     // Focus on input for better UX
-    analyzerInput.focus();
+    if (analyzerInput) {
+        analyzerInput.focus();
+    }
 }
 
 // ============================================
